@@ -129,6 +129,7 @@ class Ucx(AutotoolsPackage, CudaPackage):
     variant("verbs", default=False, description="Build OpenFabrics support")
     variant("xpmem", default=False, description="Enable XPMEM support")
     variant("gtest", default=False, description="Build and install Googletest")
+    variant("level-zero", default=False, description="Enable oneAPI Level Zero (ZE) Runtime support")
 
     depends_on("c", type="build")  # generated
     depends_on("cxx", type="build")  # generated
@@ -153,12 +154,13 @@ class Ucx(AutotoolsPackage, CudaPackage):
     conflicts("+rocm", when="+gdrcopy", msg="gdrcopy > 2.0 does not support rocm")
 
     # https://github.com/openucx/ucx/issues/10589
-    conflicts("%gcc@15:", when="@:1.18")
+    #conflicts("%gcc@15:", when="@:1.18")
 
     configure_abs_path = "contrib/configure-release"
 
     # See https://github.com/openucx/ucx/pull/8629, wrong int type
     patch("commit-2523555.patch", when="@1.13.1")
+    patch("gcc15-v1.19.0-v5.patch", when="@1.19.0 %gcc@15:")
 
     def patch(self):
         if self.spec.satisfies("+rocm"):
@@ -179,6 +181,14 @@ class Ucx(AutotoolsPackage, CudaPackage):
     @when("@1.9-dev")
     def autoreconf(self, spec, prefix):
         Executable("./autogen.sh")()
+
+    def flag_handler(self, name, flags):
+        if self.spec.satisfies("%gcc@15:"):
+            if name == "cflags":
+                # gcc@15: is -std=gnu23 by default
+                flags.append("-std=gnu17")
+
+        return (flags, None, None)
 
     def configure_args(self):
         spec = self.spec
@@ -209,6 +219,7 @@ class Ucx(AutotoolsPackage, CudaPackage):
         args += self.with_or_without("rc")
         args += self.with_or_without("ud")
         args += self.with_or_without("xpmem", activation_value="prefix")
+        args += self.with_or_without("level-zero")
 
         # mlx5_dv
         # UCX <= 1.17: --with-mlx5-dv
@@ -285,6 +296,9 @@ class Ucx(AutotoolsPackage, CudaPackage):
             args.append("--with-rocm=" + self.spec["hip"].prefix)
         else:
             args.append("--without-rocm")
+        
+        if self.spec.satisfies("%gcc@15:"):
+            args.extend(["CFLAGS=-std=gnu17"])
 
         return args
 

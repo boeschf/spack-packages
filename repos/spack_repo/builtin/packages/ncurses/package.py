@@ -128,6 +128,11 @@ class Ncurses(AutotoolsPackage, GNUMirrorPackage):
             if name == "cxxflags":
                 flags.append(self["cxx"].standard_flag(language="cxx", standard="14"))
 
+        if self.spec.satisfies("%gcc@15:"):
+            if name == "cflags":
+                # gcc@15: is -std=gnu23 by default
+                flags.append("-std=gnu17")
+
         return (flags, None, None)
 
     def configure(self, spec, prefix):

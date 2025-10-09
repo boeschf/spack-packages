@@ -70,6 +70,7 @@ class Krb5(AutotoolsPackage):
     depends_on("perl", type="build")
     depends_on("findutils", type="build")
     depends_on("pkgconfig", type="build")
+    depends_on("lmdb")
 
     variant(
         "shared", default=True, description="install shared libraries if True, static if false"

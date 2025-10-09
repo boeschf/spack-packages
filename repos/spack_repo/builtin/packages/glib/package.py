@@ -78,6 +78,8 @@ class Glib(MesonPackage):
         values=any_combination_of("dtrace", "systemtap"),
         description="Enable tracing support",
     )
+    variant("introspection", default=False,
+            description="Build GObject Introspection data (.gir/.typelib)")
 
     depends_on("c", type="build")
     depends_on("cxx", type="build")
@@ -90,6 +92,7 @@ class Glib(MesonPackage):
         depends_on("meson@0.49.2:", when="@2.61.2:")
         depends_on("meson@0.48.0:")
         depends_on("pkgconfig", type="build")
+        depends_on("gobject-introspection", when="+introspection")
 
     depends_on("libffi")
     depends_on("zlib-api")
@@ -204,6 +207,10 @@ class MesonBuilder(meson.MesonBuilder):
 
     def meson_args(self):
         args = []
+        if self.spec.satisfies("+introspection"):
+            args.append("-Dintrospection=enabled")
+        else:
+            args.append("-Dintrospection=disabled")
         if self.spec.satisfies("@2.63.5:"):
             if self.spec.satisfies("+libmount"):
                 args.append("-Dlibmount=enabled")
