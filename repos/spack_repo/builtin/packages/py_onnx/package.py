@@ -22,6 +22,7 @@ class PyOnnx(PythonPackage):
 
     license("Apache-2.0", checked_by="wdconinc")
 
+    version("1.19.1", sha256="737524d6eb3907d3499ea459c6f01c5a96278bb3a0f2ff8ae04786fb5d7f1ed5")
     version("1.17.0", sha256="48ca1a91ff73c1d5e3ea2eef20ae5d0e709bb8a2355ed798ffc2169753013fd3")
     version("1.16.2", sha256="b33a282b038813c4b69e73ea65c2909768e8dd6cc10619b70632335daf094646")
     version("1.16.1", sha256="8299193f0f2a3849bfc069641aa8e4f93696602da8d165632af8ee48ec7556b6")

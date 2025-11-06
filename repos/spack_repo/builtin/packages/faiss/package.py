@@ -5,6 +5,7 @@
 import os
 
 from spack_repo.builtin.build_systems import autotools, cmake, python
+from spack_repo.builtin.build_systems.python import PythonPipBuilder
 from spack_repo.builtin.build_systems.autotools import AutotoolsPackage
 from spack_repo.builtin.build_systems.cmake import CMakePackage
 from spack_repo.builtin.build_systems.cuda import CudaPackage
@@ -111,15 +112,19 @@ class CMakeBuilder(cmake.CMakeBuilder):
             args.append(self.define_from_variant(key, "cuda_arch"))
             # args.append(self.define_from_variant(
             # 'CMAKE_CUDA_STANDARD', 'cudastd'))
+
+        if self.spec.satisfies("%gcc@14:"):
+            args.append(self.define("CMAKE_C_FLAGS", "-Wno-incompatible-pointer-types"))
+
         return args
 
     def install(self, pkg, spec, prefix):
         super().install(pkg, spec, prefix)
         if spec.satisfies("+python"):
 
-            class CustomPythonPipBuilder(python.PythonPipBuilder):
+            class CustomPythonPipBuilder(PythonPipBuilder):
                 def __init__(self, pkg, build_dirname):
-                    python.PythonPipBuilder.__init__(self, pkg)
+                    PythonPipBuilder.__init__(self, pkg)
                     self.build_dirname = build_dirname
 
                 @property

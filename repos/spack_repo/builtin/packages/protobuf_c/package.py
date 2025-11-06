@@ -20,11 +20,13 @@ class ProtobufC(AutotoolsPackage):
 
     license("BSD-2-Clause")
 
+    version("1.5.2", sha256="e2c86271873a79c92b58fef7ebf8de1aa0df4738347a8bd5d4e65a80a16d0d24")
     version("1.4.1", sha256="4cc4facd508172f3e0a4d3a8736225d472418aee35b4ad053384b137b220339f")
     version("1.3.2", sha256="53f251f14c597bdb087aecf0b63630f434d73f5a10fc1ac545073597535b9e74")
 
     depends_on("c", type="build")  # generated
     depends_on("cxx", type="build")  # generated
 
-    depends_on("protobuf@:3.21.12")
+    depends_on("protobuf")
+    depends_on("protobuf@:3.21.12", when="@:1.4.1")
     depends_on("pkgconfig", type="build")

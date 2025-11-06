@@ -19,6 +19,9 @@ class AbseilCpp(CMakePackage):
     license("Apache-2.0", checked_by="wdconinc")
 
     version(
+        "20250814.1", sha256="1692f77d1739bacf3f94337188b78583cf09bab7e420d2dc6c5605a4f86785a1"
+    )
+    version(
         "20240722.0", sha256="f50e5ac311a81382da7fa75b97310e4b9006474f9560ac46f54a9967f07d4ae3"
     )
     version(

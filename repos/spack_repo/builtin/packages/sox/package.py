@@ -26,6 +26,8 @@ class Sox(AutotoolsPackage):
     depends_on("lame", when="+mp3")
     depends_on("libmad", when="+mp3")
 
+    patch("sox-sample-test-fix.patch", when="@14.4.2", level=0)
+
     def flag_handler(self, name, flags):
         # https://github.com/Homebrew/homebrew-core/blob/master/Formula/s/sox.rb
         if name == "cflags":

@@ -73,4 +73,7 @@ class Cutlass(CMakePackage, CudaPackage):
 
     def cmake_args(self):
         cuda_arch = self.spec.variants["cuda_arch"].value
-        return [self.define("CUTLASS_NVCC_ARCHS", ";".join(cuda_arch))]
+        return [
+            self.define("CUTLASS_NVCC_ARCHS", ";".join(cuda_arch)),
+            self.define("CUTLASS_ENABLE_EXAMPLES", "OFF")
+        ]
